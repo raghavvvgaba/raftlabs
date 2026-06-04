@@ -6,15 +6,15 @@ const menuItems: MenuItem[] = [
     name: "Margherita Pizza",
     description: "Classic cheese pizza with tomato sauce and fresh basil.",
     price: 299,
-    image: "/menu/pizza-margherita.svg",
+    image: "https://images.pexels.com/photos/31596394/pexels-photo-31596394.jpeg",
     foodType: "veg",
   },
   {
     id: "cheese-burger",
     name: "Cheese Burger",
-    description: "Juicy beef patty with melted cheese, lettuce, and tomato.",
+    description: "Juicy chicken patty with melted cheese, lettuce, and tomato.",
     price: 199,
-    image: "/menu/cheese-burger.svg",
+    image: "https://images.pexels.com/photos/34407507/pexels-photo-34407507.jpeg",
     foodType: "non-veg",
   },
   {
@@ -22,7 +22,7 @@ const menuItems: MenuItem[] = [
     name: "Creamy Pasta",
     description: "Penne pasta in a rich and creamy Alfredo sauce.",
     price: 249,
-    image: "/menu/creamy-pasta.svg",
+    image: "https://images.pexels.com/photos/31779533/pexels-photo-31779533.jpeg",
     foodType: "veg",
   },
   {
@@ -30,7 +30,7 @@ const menuItems: MenuItem[] = [
     name: "French Fries",
     description: "Crispy golden fries seasoned with salt and pepper.",
     price: 99,
-    image: "/menu/french-fries.svg",
+    image: "https://images.pexels.com/photos/5836999/pexels-photo-5836999.jpeg",
     foodType: "veg",
   },
   {
@@ -38,7 +38,7 @@ const menuItems: MenuItem[] = [
     name: "Cold Coffee",
     description: "Chilled coffee blended with milk and ice.",
     price: 129,
-    image: "/menu/cold-coffee.svg",
+    image: "https://images.pexels.com/photos/11299735/pexels-photo-11299735.jpeg",
     foodType: "veg",
   },
 ];

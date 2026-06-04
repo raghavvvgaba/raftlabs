@@ -74,7 +74,7 @@ Supported order statuses:
 3. Out for Delivery
 4. Delivered
 
-The status update is simulated by the backend. The frontend polls the order endpoint every few seconds to fetch the latest status.
+The status update is simulated by the backend. The frontend polls the order endpoint every 3 seconds to fetch the latest status.
 
 ---
 
@@ -126,7 +126,7 @@ Validation covers:
 - Empty cart
 - Invalid quantity
 - Missing customer details
-- Invalid phone number
+- Invalid phone number; phone numbers must be exactly 10 digits
 - Invalid order status
 - Invalid menu item IDs
 
@@ -201,7 +201,7 @@ src/
 Detailed API contracts and data models are documented in:
 
 ```txt
-docs/API.md
+API.md
 ```
 
 ---

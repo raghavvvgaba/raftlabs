@@ -13,9 +13,13 @@ export const createOrderItemSchema = z.object({
 });
 
 export const customerDetailsSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  address: z.string().min(1, "Address is required"),
-  phone: z.string().min(1, "Phone number is required"),
+  name: z.string().trim().min(1, "Name is required"),
+  address: z.string().trim().min(1, "Address is required"),
+  phone: z
+    .string()
+    .trim()
+    .min(1, "Phone number is required")
+    .regex(/^\d{10}$/, "Phone number must be 10 digits"),
 });
 
 export const createOrderSchema = z.object({
@@ -26,3 +30,17 @@ export const createOrderSchema = z.object({
 export const updateOrderStatusSchema = z.object({
   status: orderStatusSchema,
 });
+
+export type ValidationDetail = {
+  field: string;
+  message: string;
+};
+
+export function formatValidationIssues(
+  issues: z.ZodIssue[]
+): ValidationDetail[] {
+  return issues.map((issue) => ({
+    field: issue.path.join("."),
+    message: issue.message,
+  }));
+}

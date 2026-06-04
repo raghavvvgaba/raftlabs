@@ -1,19 +1,27 @@
 import { NextResponse } from "next/server";
-import { createOrderSchema } from "@/lib/validation";
+import { createOrderSchema, formatValidationIssues } from "@/lib/validation";
 import { getMenuItemById, createOrder } from "@/lib/store";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid request body", details: [] },
+        { status: 400 }
+      );
+    }
+
     const parseResult = createOrderSchema.safeParse(body);
 
     if (!parseResult.success) {
-      const details = parseResult.error.issues.map((issue) => ({
-        field: issue.path.join("."),
-        message: issue.message,
-      }));
       return NextResponse.json(
-        { error: "Invalid request body", details },
+        {
+          error: "Invalid request body",
+          details: formatValidationIssues(parseResult.error.issues),
+        },
         { status: 400 }
       );
     }
@@ -23,7 +31,10 @@ export async function POST(request: Request) {
     const invalidItem = items.find((item) => !getMenuItemById(item.menuItemId));
     if (invalidItem) {
       return NextResponse.json(
-        { error: "Invalid menu item", message: "One or more menu items do not exist" },
+        {
+          error: "Invalid menu item",
+          message: "One or more menu items do not exist",
+        },
         { status: 400 }
       );
     }

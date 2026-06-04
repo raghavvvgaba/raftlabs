@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
+const ORDER_POLLING_INTERVAL_MS = 3000;
+
 export default function OrderStatusPage() {
   const params = useParams();
   const orderId = params.orderId as string;
@@ -42,13 +44,13 @@ export default function OrderStatusPage() {
 
     fetchOrder();
 
+    if (order?.status === "Delivered") {
+      return;
+    }
+
     const interval = setInterval(() => {
-      if (order?.status === "Delivered") {
-        clearInterval(interval);
-        return;
-      }
       fetchOrder();
-    }, 10000);
+    }, ORDER_POLLING_INTERVAL_MS);
 
     return () => clearInterval(interval);
   }, [orderId, order?.status]);
@@ -73,6 +75,10 @@ export default function OrderStatusPage() {
           <div className="bg-destructive/10 text-destructive px-4 py-3 rounded-md border border-destructive/20 mb-4">
             {error}
           </div>
+          <p className="mb-4 text-sm text-muted-foreground">
+            The order may have expired from the in-memory store or the request
+            may have failed. You can return to the menu and place a fresh order.
+          </p>
           <Link href="/">
             <Button variant="outline">Back to Menu</Button>
           </Link>

@@ -73,13 +73,13 @@ Use these files:
 README.md       Human-facing project documentation
 Phases.md       Implementation plan
 AGENTS.md       Coding assistant instructions
-docs/API.md     API contracts and data models
+API.md          API contracts and data models
 ```
 
 Keep detailed API contracts and data models in:
 
 ```txt
-docs/API.md
+API.md
 ```
 
 Do not overload this file with long endpoint documentation.
@@ -195,7 +195,7 @@ PATCH /api/orders/:orderId/status
 Follow the contract in:
 
 ```txt
-docs/API.md
+API.md
 ```
 
 ---

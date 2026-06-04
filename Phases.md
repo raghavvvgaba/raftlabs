@@ -405,7 +405,7 @@ Create and maintain:
 README.md
 Phases.md
 AGENTS.md
-docs/API.md
+API.md
 ```
 
 `README.md` should explain:
@@ -433,7 +433,7 @@ docs/API.md
 - Scope boundaries
 - Where to find detailed docs
 
-`docs/API.md` should explain:
+`API.md` should explain:
 
 - Data models
 - API endpoints

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import { useRouter } from "next/navigation";
 import { getMenuItems } from "@/lib/store";
+import { createOrderSchema, formatValidationIssues } from "@/lib/validation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,31 +31,52 @@ export function CheckoutForm() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
-    setIsSubmitting(true);
 
     if (items.length === 0) {
       setError("Your cart is empty.");
-      setIsSubmitting(false);
       return;
     }
+
+    const orderPayload = {
+      items: items.map((item) => ({
+        menuItemId: item.menuItemId,
+        quantity: item.quantity,
+      })),
+      customer: { name, address, phone },
+    };
+
+    const parseResult = createOrderSchema.safeParse(orderPayload);
+    if (!parseResult.success) {
+      setError(
+        formatValidationIssues(parseResult.error.issues)
+          .map((issue) => issue.message)
+          .join(" ")
+      );
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: items.map((item) => ({
-            menuItemId: item.menuItemId,
-            quantity: item.quantity,
-          })),
-          customer: { name, address, phone },
-        }),
+        body: JSON.stringify(parseResult.data),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Failed to place order. Please try again.");
+        const details =
+          Array.isArray(data.details) && data.details.length > 0
+            ? data.details
+                .map((detail: { message?: string }) => detail.message)
+                .filter(Boolean)
+                .join(" ")
+            : "";
+        setError(
+          details || data.message || data.error || "Failed to place order. Please try again."
+        );
         setIsSubmitting(false);
         return;
       }
@@ -79,9 +101,12 @@ export function CheckoutForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
       {error && (
-        <div className="bg-destructive/10 text-destructive px-4 py-3 rounded-md border border-destructive/20">
+        <div
+          role="alert"
+          className="bg-destructive/10 text-destructive px-4 py-3 rounded-md border border-destructive/20"
+        >
           {error}
         </div>
       )}

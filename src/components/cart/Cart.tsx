@@ -9,6 +9,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetDescription,
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
@@ -49,12 +50,15 @@ export function Cart({ className }: CartProps) {
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full max-w-md flex flex-col p-0">
-        <SheetHeader className="px-6 pt-6 pb-2">
+      <SheetContent className="w-full sm:max-w-md flex flex-col p-0">
+        <SheetHeader className="px-4 pt-5 pb-2 sm:px-6 sm:pt-6">
           <SheetTitle>Your Cart</SheetTitle>
+          <SheetDescription>
+            Review selected items, adjust quantities, and continue to checkout.
+          </SheetDescription>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 sm:py-4">
           {items.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               Your cart is empty.
@@ -77,7 +81,7 @@ export function Cart({ className }: CartProps) {
         </div>
 
         {items.length > 0 && (
-          <div className="border-t border-border px-6 py-4 space-y-4">
+          <div className="border-t border-border px-4 py-4 sm:px-6 space-y-4 pb-safe">
             <div className="flex justify-between items-center">
               <span className="text-lg font-semibold">Total:</span>
               <span className="text-xl font-bold text-primary">

@@ -59,7 +59,7 @@ export type CustomerDetails = {
 - `name` is required.
 - `address` is required.
 - `phone` is required.
-- Phone validation can be simple for this assessment.
+- `phone` must be exactly 10 digits.
 
 ---
 
@@ -196,7 +196,7 @@ Returns all available menu items.
       "name": "Margherita Pizza",
       "description": "Classic cheese pizza with tomato sauce and fresh basil.",
       "price": 299,
-      "image": "/menu/pizza-margherita.svg",
+      "image": "https://images.pexels.com/photos/31596394/pexels-photo-31596394.jpeg",
       "foodType": "veg"
     }
   ]
@@ -253,6 +253,7 @@ Creates a new order using cart items and customer delivery details.
 - `customer.name` is required.
 - `customer.address` is required.
 - `customer.phone` is required.
+- `customer.phone` must be exactly 10 digits.
 
 ### Response: 201
 
@@ -457,9 +458,13 @@ export const createOrderItemSchema = z.object({
 });
 
 export const customerDetailsSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  address: z.string().min(1, "Address is required"),
-  phone: z.string().min(1, "Phone number is required"),
+  name: z.string().trim().min(1, "Name is required"),
+  address: z.string().trim().min(1, "Address is required"),
+  phone: z
+    .string()
+    .trim()
+    .min(1, "Phone number is required")
+    .regex(/^\d{10}$/, "Phone number must be 10 digits"),
 });
 
 export const createOrderSchema = z.object({
@@ -555,7 +560,7 @@ GET /api/orders/:orderId
 Recommended interval:
 
 ```txt
-2000ms or 3000ms
+3000ms
 ```
 
 Stop polling when status is:

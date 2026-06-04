@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { updateOrderStatusSchema } from "@/lib/validation";
+import {
+  formatValidationIssues,
+  updateOrderStatusSchema,
+} from "@/lib/validation";
 import { getOrderById, updateOrderStatus } from "@/lib/store";
 
 export async function PATCH(
@@ -8,12 +11,24 @@ export async function PATCH(
 ) {
   try {
     const { orderId } = await params;
-    const body = await request.json();
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid status", details: [] },
+        { status: 400 }
+      );
+    }
+
     const parseResult = updateOrderStatusSchema.safeParse(body);
 
     if (!parseResult.success) {
       return NextResponse.json(
-        { error: "Invalid status" },
+        {
+          error: "Invalid status",
+          details: formatValidationIssues(parseResult.error.issues),
+        },
         { status: 400 }
       );
     }

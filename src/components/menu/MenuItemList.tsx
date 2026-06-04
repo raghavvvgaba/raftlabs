@@ -24,16 +24,18 @@ export function MenuItemList({ item }: MenuItemListProps) {
       <Card className="overflow-visible rounded-lg border border-border bg-card py-0 shadow-sm transition-all duration-200 hover:shadow-md dark:shadow-none">
         <CardContent className="flex gap-4 p-3 sm:gap-5 sm:p-4">
           <div className="min-w-0 flex-1 py-1">
-            <div className="mb-2 flex items-center gap-2">
+            <div className="mb-1">
               <FoodTypeBadge foodType={item.foodType} />
-              <Badge variant="secondary" className="h-6 rounded-md px-2 font-semibold">
-                ₹{item.price}
-              </Badge>
             </div>
             <h3 className="text-base font-semibold leading-6 text-foreground sm:text-lg">
               {item.name}
             </h3>
-            <p className="mt-2 line-clamp-3 text-sm leading-5 text-muted-foreground sm:line-clamp-2">
+            <div className="mb-2 mt-1">
+              <Badge variant="secondary" className="h-6 rounded-md px-2 font-semibold">
+                ₹{item.price}
+              </Badge>
+            </div>
+            <p className="line-clamp-3 text-sm leading-5 text-muted-foreground sm:line-clamp-2">
               {item.description}
             </p>
           </div>
@@ -52,19 +54,19 @@ export function MenuItemList({ item }: MenuItemListProps) {
                   variant="ghost"
                   size="icon-sm"
                   onClick={() => decrementItem(item.id)}
-                  className="h-10 w-full rounded-none text-primary hover:bg-secondary hover:text-foreground dark:hover:bg-muted"
+                  className="h-10 w-full rounded-none text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 dark:text-emerald-400 dark:hover:bg-emerald-950 dark:hover:text-emerald-300"
                   aria-label="Decrease quantity"
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
-                <span className="border-x border-border text-center text-base font-semibold text-primary">
+                <span className="border-x border-border text-center text-base font-semibold text-emerald-600 dark:text-emerald-400">
                   {quantity}
                 </span>
                 <Button
                   variant="ghost"
                   size="icon-sm"
                   onClick={() => incrementItem(item.id)}
-                  className="h-10 w-full rounded-none text-primary hover:bg-secondary hover:text-foreground dark:hover:bg-muted"
+                  className="h-10 w-full rounded-none text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 dark:text-emerald-400 dark:hover:bg-emerald-950 dark:hover:text-emerald-300"
                   aria-label="Increase quantity"
                 >
                   <Plus className="h-4 w-4" />
