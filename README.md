@@ -289,26 +289,7 @@ pnpm test:watch Run tests in watch mode
 - Data is stored in memory, so orders reset when the server restarts.
 - Recent order links and totals are stored in browser `localStorage`, but those links may lead to a missing-order state after a server restart because the backend store is still in memory.
 - Authentication is not included because the assessment does not ask for it.
-- Payments are not included because the assessment does not ask for it.
 - Admin dashboard is not included because the assessment only asks for order placement and status updates.
-- Real-time updates are simulated using polling instead of WebSockets.
 
 ---
 
-## Future Improvements
-
-After the core feature is complete, the in-memory store can be replaced with:
-
-- Prisma
-- SQLite for local development
-- PostgreSQL for production
-
-Possible future improvements:
-
-- Persist orders in a database
-- Add authentication
-- Add admin order management UI
-- Replace polling with Server-Sent Events or WebSockets
-- Add payment flow
-- Add order history
-- Add deployment configuration
