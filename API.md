@@ -110,6 +110,25 @@ export type Order = {
 
 ---
 
+## RecentOrderRef
+
+```ts
+export type RecentOrderRef = {
+  orderId: string;
+  total: number;
+  savedAt: string;
+};
+```
+
+### Notes
+
+- This is a client-side persisted model, not a server API resource.
+- It is stored in browser `localStorage` to help users reopen recent order tracking pages.
+- `total` is copied from the order response so the navbar history can show a useful summary without adding a new API endpoint.
+- `savedAt` records when the browser saved the reference.
+
+---
+
 # In-Memory Store
 
 The in-memory store should contain:

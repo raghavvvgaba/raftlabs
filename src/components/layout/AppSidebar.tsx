@@ -4,6 +4,7 @@ import { Moon, SunMedium } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Cart } from "@/components/cart/Cart";
 import { useTheme } from "@/lib/theme-context";
+import { RecentOrdersDropdown } from "@/components/order-status/RecentOrdersDropdown";
 
 export function AppSidebar() {
   const { theme, isMounted, toggleTheme } = useTheme();
@@ -18,6 +19,7 @@ export function AppSidebar() {
           </h1>
         </div>
         <div className="flex items-center gap-2">
+          <RecentOrdersDropdown />
           <Button
             variant="outline"
             size="icon"

@@ -6,6 +6,7 @@ import { useCart } from "@/lib/cart-context";
 import { useRouter } from "next/navigation";
 import { getMenuItems } from "@/lib/store";
 import { createOrderSchema, formatValidationIssues } from "@/lib/validation";
+import { saveRecentOrder } from "@/lib/recent-orders";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -81,6 +82,7 @@ export function CheckoutForm() {
         return;
       }
 
+      saveRecentOrder(data.order.id, data.order.total);
       clearCart();
       router.push(`/orders/${data.order.id}`);
     } catch {

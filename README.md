@@ -52,6 +52,7 @@ Users can:
 - Decrease item quantity
 - Remove items from the cart
 - View the cart total
+- Reopen recent orders from the navbar in the same browser
 
 ### Checkout
 
@@ -90,6 +91,8 @@ GET /api/orders/:orderId
 
 This keeps the implementation simple, reliable, and appropriate for the assessment.
 
+Recent order references are stored in browser `localStorage` so users can revisit tracking pages from the navbar after leaving the order detail screen.
+
 WebSockets were intentionally not used because the feature only requires one-way status updates from the server to the client. For a production-scale system, this could later be replaced with Server-Sent Events or WebSockets depending on the real-time requirements.
 
 ---
@@ -116,6 +119,8 @@ Next.js Route Handlers are used for API endpoints such as:
 The assessment allows in-memory storage or a simple database.
 
 This project starts with an in-memory store to keep the first implementation focused and fast. The storage layer is kept separate so it can later be replaced with Prisma and a database.
+
+Recent order references are persisted only on the client. Full order details are still served from the in-memory server store.
 
 ### 4. Zod for Validation
 
@@ -282,6 +287,7 @@ pnpm test:watch Run tests in watch mode
 ## Known Limitations
 
 - Data is stored in memory, so orders reset when the server restarts.
+- Recent order links and totals are stored in browser `localStorage`, but those links may lead to a missing-order state after a server restart because the backend store is still in memory.
 - Authentication is not included because the assessment does not ask for it.
 - Payments are not included because the assessment does not ask for it.
 - Admin dashboard is not included because the assessment only asks for order placement and status updates.

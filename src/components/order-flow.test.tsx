@@ -1,11 +1,14 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Cart } from "./cart/Cart";
 import { CheckoutForm } from "./checkout/CheckoutForm";
 import { MenuItemCard } from "./menu/MenuItemCard";
+import { RecentOrdersDropdown } from "./order-status/RecentOrdersDropdown";
 import { OrderStatusTracker } from "./order-status/OrderStatusTracker";
 import { CartProvider, useCart } from "@/lib/cart-context";
+import { ThemeProvider } from "@/lib/theme-context";
 import type { MenuItem, Order } from "@/lib/types";
+import { RECENT_ORDERS_STORAGE_KEY } from "@/lib/recent-orders";
 
 const pizza: MenuItem = {
   id: "pizza-margherita",
@@ -26,6 +29,79 @@ function SeedCartButton() {
 }
 
 describe("order flow components", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it("shows an empty order history dropdown when storage is empty", async () => {
+    render(<RecentOrdersDropdown defaultOpen />);
+
+    expect(await screen.findByText("Order history")).toBeInTheDocument();
+    expect(screen.getByText("No recent orders yet.")).toBeInTheDocument();
+  });
+
+  it("shows recent orders from localStorage in the navbar dropdown", async () => {
+    localStorage.setItem(
+      RECENT_ORDERS_STORAGE_KEY,
+      JSON.stringify([
+        {
+          orderId: "order_123",
+          total: 598,
+          savedAt: "2026-06-05T10:00:00.000Z",
+        },
+      ])
+    );
+
+    vi.spyOn(global, "fetch").mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          order: {
+            status: "Delivered",
+          },
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      )
+    );
+
+    render(<RecentOrdersDropdown defaultOpen />);
+
+    expect(await screen.findByText("Order history")).toBeInTheDocument();
+    expect(screen.getByText("Order 1")).toBeInTheDocument();
+    expect(screen.getByText("₹598.00")).toBeInTheDocument();
+    expect(await screen.findByText("Delivered")).toBeInTheDocument();
+    expect(
+      screen.getByRole("menuitem", { name: /Order 1/i })
+    ).toHaveAttribute("href", "/orders/order_123");
+
+    vi.restoreAllMocks();
+  });
+
+  it("shows unavailable status for stale recent order links", async () => {
+    localStorage.setItem(
+      RECENT_ORDERS_STORAGE_KEY,
+      JSON.stringify([
+        {
+          orderId: "order_missing",
+          total: 299,
+          savedAt: "2026-06-05T10:00:00.000Z",
+        },
+      ])
+    );
+
+    vi.spyOn(global, "fetch").mockResolvedValueOnce(
+      new Response(JSON.stringify({ error: "Order not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      })
+    );
+
+    render(<RecentOrdersDropdown defaultOpen />);
+
+    expect(await screen.findByText("Unavailable")).toBeInTheDocument();
+
+    vi.restoreAllMocks();
+  });
+
   it("renders a menu item card with name, description, price, and image", () => {
     renderWithCart(<MenuItemCard item={pizza} />);
 
@@ -130,6 +206,54 @@ describe("order flow components", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Phone number must be 10 digits"
     );
+
+    vi.restoreAllMocks();
+  });
+
+  it("stores a recent order after successful checkout", async () => {
+    vi.spyOn(global, "fetch").mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          order: {
+            id: "order_placed_123",
+            total: 299,
+          },
+        }),
+        { status: 201, headers: { "Content-Type": "application/json" } }
+      )
+    );
+
+    renderWithCart(
+      <>
+        <SeedCartButton />
+        <CheckoutForm />
+      </>
+    );
+
+    fireEvent.click(screen.getByText("Seed cart"));
+    fireEvent.change(screen.getByLabelText("Name"), {
+      target: { value: "Raghav" },
+    });
+    fireEvent.change(screen.getByLabelText("Address"), {
+      target: { value: "123 Main Street" },
+    });
+    fireEvent.change(screen.getByLabelText("Phone Number"), {
+      target: { value: "9876543210" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Place Order" }));
+
+    await waitFor(() => {
+      const savedOrders = JSON.parse(
+        localStorage.getItem(RECENT_ORDERS_STORAGE_KEY) ?? "[]"
+      );
+
+      expect(savedOrders[0]).toEqual(
+        expect.objectContaining({
+          orderId: "order_placed_123",
+          total: 299,
+        })
+      );
+    });
 
     vi.restoreAllMocks();
   });

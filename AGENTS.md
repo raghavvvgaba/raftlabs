@@ -12,6 +12,7 @@ It allows users to:
 - Enter delivery details
 - Place an order
 - Track order status
+- Revisit recent order links from the navbar in the same browser
 
 The project is for a Sr Full Stack Developer assessment.
 

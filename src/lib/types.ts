@@ -40,3 +40,9 @@ export type Order = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type RecentOrderRef = {
+  orderId: string;
+  total: number;
+  savedAt: string;
+};

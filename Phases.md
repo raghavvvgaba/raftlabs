@@ -476,4 +476,19 @@ Possible models:
 - OrderItem
 - CustomerDetails
 
+---
+
+# Enhancement: Revisitable Orders
+
+Add a lightweight recent-orders experience on the homepage.
+
+Use browser `localStorage` to persist a small list of recent order references so users can return to `/orders/:orderId` from the navbar after leaving the status page.
+
+This enhancement should:
+
+- Save recent order IDs after successful order placement
+- Show recent order links and totals in the navbar order-history dropdown
+- Keep completed orders revisitable
+- Continue using the existing in-memory backend store for full order details
+
 This is intentionally left out of the first implementation because the assessment allows in-memory storage and the first priority is a clean working feature.
